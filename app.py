@@ -1,53 +1,36 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, jsonify, render_template, request
 import os
 
 app = Flask(__name__)
 
-# Upload folder
-UPLOAD_FOLDER = 'static/uploads'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-# Sample phone data (SINGLE SOURCE OF TRUTH)
 phones = [
     {
         "id": 1,
-        "name": "iPhone 14",
-        "price": "₹70,000",
-        "image": "iphone.jpg"
+        "name": "iPhone 13",
+        "price": "₹55,000",
+        "image": "https://via.placeholder.com/150"
     },
     {
         "id": 2,
-        "name": "Samsung S23",
-        "price": "₹65,000",
-        "image": "samsung.jpg"
+        "name": "Samsung S21",
+        "price": "₹40,000",
+        "image": "https://via.placeholder.com/150"
     }
 ]
 
 @app.route("/")
 def home():
-    return "RePhone Backend Running"
-
-@app.route("/phones")
-def phone_list():
-    return render_template("phones.html", phones=phones)
+    return "RePhone backend running successfully"
 
 @app.route("/api/phones")
-def api_phones():
+def get_phones():
     return jsonify(phones)
 
-@app.route("/upload", methods=["POST"])
-def upload_image():
-    if 'image' not in request.files:
-        return "No image found", 400
-
-    image = request.files['image']
-    if image.filename == "":
-        return "No selected file", 400
-
-    filepath = os.path.join(app.config['UPLOAD_FOLDER'], image.filename)
-    image.save(filepath)
-
-    return "Image uploaded successfully"
+@app.route("/phones")
+def phones_page():
+    return jsonify(phones)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
+
