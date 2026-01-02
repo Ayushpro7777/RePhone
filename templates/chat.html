@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat</title>
+</head>
+<body>
+    <h2>Chat for Phone ID: {{ request.view_args.phone_id }}</h2>
+
+    <form method="post">
+        <input type="text" name="message" placeholder="Enter your message" required>
+        <button type="submit">Send</button>
+    </form>
+
+    <hr>
+
+    {% for chat in chats %}
+        <p>
+            <b>{{ chat[2] }}</b> <!-- Assuming chat[2] is message text -->
+            <small> at {{ chat[3] if chat|length > 3 else '' }}</small>
+        </p>
+    {% endfor %}
+
+    <a href="/phones">Back to Phones</a>
+</body>
+</html>
