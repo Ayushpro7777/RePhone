@@ -1,62 +1,25 @@
 import sqlite3
 
-conn = sqlite3.connect("database.db")
-cursor = conn.cursor()
+DB_NAME = "rephone.db"
 
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    email TEXT,
-    password TEXT
-)
-""")
+def get_connection():
+    conn = sqlite3.connect(DB_NAME)
+    conn.row_factory = sqlite3.Row
+    return conn
 
-conn.commit()
-conn.close()
+def init_db():
+    conn = get_connection()
+    cursor = conn.cursor()
 
-print("Database ready")
-conn = sqlite3.connect("database.db")
-cursor = conn.cursor()
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS phones (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        price TEXT NOT NULL,
+        image TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    """)
 
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS phones (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    brand TEXT,
-    model TEXT,
-    price TEXT,
-    location TEXT
-)
-""")
-
-conn.commit()
-conn.close()
-
-print("Phones table ready")
-
-conn = sqlite3.connect("database.db")
-cursor = conn.cursor()
-
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS chats (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    phone_id INTEGER,
-    message TEXT
-)
-""")
-
-conn.commit()
-conn.close()
-
-print("Chat table ready")
-conn = sqlite3.connect("database.db")
-cursor = conn.cursor()
-
-cursor.execute("""
-ALTER TABLE phones ADD COLUMN image TEXT
-""")
-
-conn.commit()
-conn.close()
-
-print("Image column added")
+    conn.commit()
+    conn.close()
